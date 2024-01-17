@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "html-resume",
+			"path": "../html-resume"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Etch-a-Sketch"
+	}
+}
