@@ -1,5 +1,3 @@
-// TO DO *** Understand height and wieght applied to clones and not original and why it affects grid differently
-
 document.addEventListener("DOMContentLoaded", () => {
   //body
   const body = document.querySelector("body");
@@ -52,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let isMouseDown = false;
   document.addEventListener("mousedown", () => {
     isMouseDown = true;
+    document.querySelectorAll('.square').forEach(sq => sq.coloredInDrag = false);
   });
   document.addEventListener("mouseup", () => {
     isMouseDown = false;
@@ -63,32 +62,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let alpha = 0.0;
 
-  function random_rgba() {
-    //math logi
-    let o = Math.round,
-      r = Math.random,
-      s = 255;
-    //primary color generate
-    let red = o(r() * s),
-      green = o(r() * s),
-      blue = o(r() * s);
-    // rgba Value generate
-    
-  
-    if (alpha >= 1) {
-      alpha = 0.1;
-    } else {
-      alpha = alpha += 0.1;
-    }
-    let rgbaValue = "rgb(" + red + ", " + green + ", " + blue + ", " + alpha.toFixed(1) + ")";
- 
-    return rgbaValue;
-  }
-
   function changeColor(event) {
-    console.log(event)
-    event.currentTarget.style.backgroundColor = random_rgba();
-  }
+    let square = event.currentTarget;
+
+    if (!square.coloredInDrag) {
+      square.coloredInDrag = true;  // Mark as colored
+    }
+    if (!square.alpha) {
+        square.alpha = 0.1; // Initial alpha
+    } else {
+        square.alpha += 0.1; // Increment alpha
+        if (square.alpha >= 1) {
+            square.alpha = 0.1; // Reset after reaching full opacity
+        }
+        console.log(square.alpha)
+    }
+
+    let o = Math.round, r = Math.random, s = 255;
+    let red = o(r() * s);
+    let green = o(r() * s);
+    let blue = o(r() * s);
+
+    square.style.backgroundColor = 'rgba(' + red + ',' + green + ',' + blue + ',' + square.alpha + ')';
+}
 
   function generateGrid(num) {
     if (num < 4 || num > 100) {
@@ -105,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       for (let i = 1; i <= num; i++) {
         let squareClone = square.cloneNode(true);
+        squareClone.classList.add('square');
         squareClone.style.width = `${gridValue}%`;
 
         squareClone.addEventListener("mousemove", (event) => {
@@ -113,12 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
         horizontalClone.appendChild(squareClone); 
-       /* These copies (or clones) are what get appended to your grid, 
-        not the original horizontalContainer and square elements themselves.The original horizontalContainer and 
-        square are never directly appended to the DOM (Document Object Model). They exist only in memory and serve as 
-        blueprints for creating the elements that actually get displayed. This is a common practice for generating 
-        repeated DOM elements dynamically, where you create a template element, clone it as needed, and 
-        then insert those clones into the document. */
       }
 
       gridContainer.appendChild(horizontalClone);
